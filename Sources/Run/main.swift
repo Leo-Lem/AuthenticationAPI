@@ -1,5 +1,5 @@
+import App
 import AuthenticatorAPI
-import AuthenticationAPI
 import Vapor
 
 var env = try Environment.detect()

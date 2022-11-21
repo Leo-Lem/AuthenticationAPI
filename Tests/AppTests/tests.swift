@@ -1,4 +1,4 @@
-@testable import AuthenticationAPI
+@testable import App
 import AuthenticatorAPI
 import XCTVapor
 
@@ -17,7 +17,7 @@ final class AuthenticationAPITests: XCTestCase {
   func testRegistering() throws {
     let credential = Credential(id: "SomeUserID", pin: "SomePIN")
     
-    try app.test(.POST, "register", headers: ["Content-Type": "application/json"]) { req in
+    try app.test(.POST, "register") { req in
       try req.content.encode(credential)
     } afterResponse: { res in
       XCTAssertEqual(res.status, .ok, "Operation unsuccessful.")
@@ -28,11 +28,11 @@ final class AuthenticationAPITests: XCTestCase {
   func testAuthenticating() throws {
     let credential = Credential(id: "SomeUserID", pin: "SomePIN")
     
-    try app.test(.POST, "register", headers: ["Content-Type": "application/json"]) { req in
+    try app.test(.POST, "register") { req in
       try req.content.encode(credential)
     }
     
-    try app.test(.POST, "authenticate", headers: ["Content-Type": "application/json"]) { req in
+    try app.test(.PUT, "authenticate") { req in
       try req.content.encode(credential)
     } afterResponse: { res in
       XCTAssertEqual(res.status, .ok, "Operation unsuccessful.")
@@ -43,20 +43,20 @@ final class AuthenticationAPITests: XCTestCase {
   func testChangingPIN() throws {
     let credential = Credential(id: "SomeUserID", pin: "SomePIN")
     
-    try app.test(.POST, "register", headers: ["Content-Type": "application/json"]) { req in
+    try app.test(.POST, "register") { req in
       try req.content.encode(credential)
     }
     
     let credentialWithNewPIN = Credential.WithNewPIN(credential: credential, newPIN: "SomeNewPIN")
     let newCredential = Credential(id: credential.id, pin: credentialWithNewPIN.newPIN)
-    try app.test(.POST, "pin-change") { req in
+    try app.test(.POST, "new-pin") { req in
       try req.content.encode(credentialWithNewPIN)
     } afterResponse: { res in
       XCTAssertEqual(res.status, .ok, "Operation unsuccessful.")
       XCTAssertEqual(try res.content.decode(Credential.self), newCredential, "Credentials don't match.")
     }
     
-    try app.test(.POST, "authenticate", headers: ["Content-Type": "application/json"]) { req in
+    try app.test(.PUT, "authenticate") { req in
       try req.content.encode(newCredential)
     }
   }

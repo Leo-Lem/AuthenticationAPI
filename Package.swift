@@ -6,7 +6,7 @@ import PackageDescription
 let authenticator = Target.target(name: "AuthenticatorAPI")
 
 let app = Target.target(
-  name: "AuthenticationAPI",
+  name: "App",
   dependencies: [
     .target(name: authenticator.name),
     .product(name: "Vapor", package: "vapor")
