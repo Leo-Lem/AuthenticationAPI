@@ -37,7 +37,7 @@ public func configure(_ app: Application, authenticator: Authenticator) throws {
         credentialWithNewPIN.credential,
         newPIN: credentialWithNewPIN.newPIN
       )
-    } catch let error as Authenticator.RegistrationError {
+    } catch let error as Authenticator.ModificationError {
       throw Abort(.init(statusCode: error.rawValue))
     }
 
@@ -52,7 +52,7 @@ public func configure(_ app: Application, authenticator: Authenticator) throws {
 
     do {
       try authenticator.authenticate(credential)
-    } catch let error as Authenticator.RegistrationError {
+    } catch let error as Authenticator.AuthenticationError {
       throw Abort(.init(statusCode: error.rawValue))
     }
 
