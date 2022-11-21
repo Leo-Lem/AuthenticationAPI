@@ -4,5 +4,10 @@ public extension Credential {
   struct WithNewPIN: Codable, Hashable {
     public let credential: Credential,
                newPIN: String
+    
+    public init(credential: Credential, newPIN: String) {
+      self.credential = credential
+      self.newPIN = newPIN
+    }
   }
 }

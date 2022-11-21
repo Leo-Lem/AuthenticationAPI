@@ -15,10 +15,6 @@ public extension Authenticator {
       throw RegistrationError.idTaken
     }
     
-    guard credential.pin.count >= 4 else {
-      throw RegistrationError.invalidPIN
-    }
-    
     credentials[credential.id] = credential.pin
   }
 }

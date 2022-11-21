@@ -1,18 +1,18 @@
 //	Created by Leopold Lemmermann on 20.11.22.
 
+// the raw value corresponds to an encoding in http status codes
 public extension Authenticator {
-  enum RegistrationError: Error {
-    case idTaken,
-         invalidID,
-         invalidPIN
+  enum RegistrationError: Int, Error {
+    case idTaken = 409,
+         invalidID = 400
   }
 
-  enum AuthenticationError: Error {
-    case unknownID,
-         wrongPIN
+  enum AuthenticationError: Int, Error {
+    case unknownID = 404,
+         wrongPIN = 401
   }
 
-  enum ModificationError: Error {
-    case newPINInvalid
+  enum ModificationError: Int, Error {
+    case newPINInvalid = 400
   }
 }
