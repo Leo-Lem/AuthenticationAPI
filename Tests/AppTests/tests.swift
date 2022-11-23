@@ -1,5 +1,5 @@
 @testable import App
-import AuthenticatorAPI
+import AppCore
 import XCTVapor
 
 final class AuthenticationAPITests: XCTestCase {

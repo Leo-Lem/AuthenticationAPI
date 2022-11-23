@@ -3,7 +3,9 @@ import PackageDescription
 
 // MARK: - (TARGETS)
 
-let authenticator = Target.target(name: "AuthenticatorAPI")
+let authenticator = Target.target(
+  name: "AppCore"
+)
 
 let app = Target.target(
   name: "App",
@@ -35,6 +37,13 @@ let authenticatorTests = Target.testTarget(
   dependencies: [.target(name: authenticator.name)]
 )
 
+// MARK: - (PRODUCTS)
+
+let library = Product.library(
+  name: authenticator.name,
+  targets: [authenticator.name]
+)
+
 // MARK: - (DEPENDENCIES)
 
 let vapor = Package.Dependency.package(url: "https://github.com/vapor/vapor.git", from: "4.0.0")
@@ -43,7 +52,8 @@ let vapor = Package.Dependency.package(url: "https://github.com/vapor/vapor.git"
 
 let package = Package(
   name: app.name,
-  platforms: [.macOS(.v12)],
+  platforms: [.iOS(.v13), .macOS(.v12)],
+  products: [library],
   dependencies: [vapor],
   targets: [authenticator, app, executable, appTests, authenticatorTests]
 )

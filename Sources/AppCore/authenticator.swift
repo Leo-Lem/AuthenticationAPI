@@ -1,10 +1,24 @@
-//	Created by Leopold Lemmermann on 20.11.22.
+//  Created by Leopold Lemmermann on 20.11.22.
+
+public class Authenticator {
+  @Persisted("Credentials") var credentials = [String: String]()
+
+  public init() {}
+  
+  #if DEBUG
+  public func clear() {
+    credentials = [:]
+  }
+  #endif
+}
+
+// persisted property wrapper
 
 import Foundation
 
 @propertyWrapper
-public struct Persisted<T: Codable> {
-  public var wrappedValue: T {
+struct Persisted<T: Codable> {
+  var wrappedValue: T {
     didSet {
       do {
         try JSONEncoder()
@@ -20,7 +34,7 @@ public struct Persisted<T: Codable> {
 
   private let url: URL
   
-  public init(wrappedValue: T, _ key: String) {
+  init(wrappedValue: T, _ key: String) {
     do {
       url = Bundle.main.bundleURL.appendingPathComponent("\(key).json")
 

@@ -1,5 +1,5 @@
 //	Created by Leopold Lemmermann on 21.11.22.
 
-import AuthenticatorAPI
+import AppCore
 
-public typealias Credential = AuthenticatorAPI.Credential
+public typealias Credential = AppCore.Credential

@@ -1,16 +1,16 @@
-import class AuthenticatorAPI.Authenticator
+import AppCore
 import Vapor
 
 extension Credential: Content {}
 extension Credential.WithNewPIN: Content {}
 
-public func configure(_ app: Application, authenticator: Authenticator) throws {
+public func configure(_ app: Application, authenticator: AppCore.Authenticator) throws {
   app.post("register") { req in
     let credential = try req.content.decode(Credential.self)
 
     do {
       try authenticator.register(credential)
-    } catch let error as Authenticator.RegistrationError {
+    } catch let error as AppCore.Authenticator.RegistrationError {
       throw Abort(.init(statusCode: error.rawValue))
     }
 
@@ -22,7 +22,7 @@ public func configure(_ app: Application, authenticator: Authenticator) throws {
 
     do {
       try authenticator.deregister(credential)
-    } catch let error as Authenticator.RegistrationError {
+    } catch let error as AppCore.Authenticator.RegistrationError {
       throw Abort(.init(statusCode: error.rawValue))
     }
 
@@ -37,7 +37,7 @@ public func configure(_ app: Application, authenticator: Authenticator) throws {
         credentialWithNewPIN.credential,
         newPIN: credentialWithNewPIN.newPIN
       )
-    } catch let error as Authenticator.ModificationError {
+    } catch let error as AppCore.Authenticator.ModificationError {
       throw Abort(.init(statusCode: error.rawValue))
     }
 
@@ -52,7 +52,7 @@ public func configure(_ app: Application, authenticator: Authenticator) throws {
 
     do {
       try authenticator.authenticate(credential)
-    } catch let error as Authenticator.AuthenticationError {
+    } catch let error as AppCore.Authenticator.AuthenticationError {
       throw Abort(.init(statusCode: error.rawValue))
     }
 

@@ -1,6 +1,6 @@
 //	Created by Leopold Lemmermann on 21.11.22.
 
-@testable import AuthenticatorAPI
+@testable import AppCore
 import XCTest
 
 final class AuthenticatorTests: XCTestCase {
@@ -22,15 +22,6 @@ final class AuthenticatorTests: XCTestCase {
       XCTAssertThrowsError(
         try authenticator.register(Credential(id: id, pin: "SomePin")),
         "Invalid ID (\(id)) is accepted."
-      )
-    }
-  }
-
-  func testInvalidPINsAreRefused() throws {
-    for pin in ["", "asd", "  "] {
-      XCTAssertThrowsError(
-        try authenticator.register(Credential(id: "SomeID", pin: pin)),
-        "Invalid PIN (\(pin)) is accepted."
       )
     }
   }
