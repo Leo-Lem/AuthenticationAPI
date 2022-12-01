@@ -1,59 +1,39 @@
 // swift-tools-version:5.6
 import PackageDescription
 
-// MARK: - (TARGETS)
-
-let authenticator = Target.target(
-  name: "AppCore"
-)
-
-let app = Target.target(
-  name: "App",
-  dependencies: [
-    .target(name: authenticator.name),
-    .product(name: "Vapor", package: "vapor")
-  ]
-)
-
-let executable = Target.executableTarget(
-  name: "Run",
-  dependencies: [
-    .target(name: app.name),
-    .target(name: authenticator.name)
-  ]
-)
-
-let appTests = Target.testTarget(
-  name: "\(app.name)Tests",
-  dependencies: [
-    .target(name: app.name),
-    .product(name: "XCTVapor", package: "vapor"),
-    .target(name: authenticator.name)
-  ]
-)
-
-let authenticatorTests = Target.testTarget(
-  name: "\(authenticator.name)Tests",
-  dependencies: [.target(name: authenticator.name)]
-)
-
-// MARK: - (PRODUCTS)
-
-let library = Product.library(
-  name: authenticator.name,
-  targets: [authenticator.name]
+let package = Package(
+  name: "AuthenticationAPI",
+  platforms: [.macOS(.v12)]
 )
 
 // MARK: - (DEPENDENCIES)
 
-let vapor = Package.Dependency.package(url: "https://github.com/vapor/vapor.git", from: "4.0.0")
+let misc = "LeosMisc"
+let vapor = "vapor"
 
-// MARK: - (PACKAGE)
+package.dependencies = [
+  .package(url: "https://github.com/vapor/\(vapor)", from: "4.0.0"),
+  .package(url: "https://github.com/Leo-Lem/\(misc)", branch: "main")
+]
 
-let package = Package(
-  name: app.name,
-  platforms: [.iOS(.v13), .macOS(.v12)],
-  products: [library],
-  dependencies: [vapor],
-  targets: [authenticator, app, executable, appTests, authenticatorTests]
+// MARK: - (TARGETS)
+
+let api: Target = .executableTarget(
+  name: "AuthenticationAPI",
+  dependencies: [
+    .product(name: "Vapor", package: vapor),
+    .byName(name: misc)
+  ],
+  path: "Sources"
 )
+
+let apiTests: Target = .testTarget(
+  name: "\(api.name)Tests",
+  dependencies: [
+    .target(name: api.name),
+    .product(name: "XCTVapor", package: vapor)
+  ],
+  path: "Tests"
+)
+
+package.targets = [api, apiTests]

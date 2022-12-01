@@ -1,15 +1,18 @@
-//	Created by Leopold Lemmermann on 21.11.22.
-
-@testable import AppCore
+@testable import AuthenticationAPI
 import XCTest
 
 final class AuthenticatorTests: XCTestCase {
   var authenticator: Authenticator!
 
-  override func setUpWithError() throws {
-    authenticator = Authenticator()
-  }
+  override func setUpWithError() throws { authenticator = Authenticator() }
 
+  func testExists() throws {
+    let credential = Credential(id: "SomeUser", pin: "SomePin")
+    try authenticator.register(credential)
+    
+    XCTAssertTrue(authenticator.exists(with: credential.id), "ID does not exist after registration")
+  }
+  
   func testDuplicateRegisteringIsNotAllowed() throws {
     let credential = Credential(id: "SomeUser", pin: "SomePin")
     try authenticator.register(credential)
@@ -30,7 +33,7 @@ final class AuthenticatorTests: XCTestCase {
     let credential = Credential(id: "SomeUser", pin: "SomePin")
     try authenticator.register(credential)
 
-    XCTAssertNoThrow(try authenticator.authenticate(credential))
+    XCTAssertNoThrow(try authenticator.login(credential))
   }
 
   func testChangingPIN() throws {
@@ -38,13 +41,8 @@ final class AuthenticatorTests: XCTestCase {
     try authenticator.register(credential)
 
     let newPIN = "SomeOtherPin"
-    try authenticator.changePIN(credential, newPIN: newPIN)
+    let newCredential = try authenticator.changePIN(credential.attachNewPIN(newPIN))
 
-    let newCredential = Credential(id: credential.id, pin: newPIN)
-
-    XCTAssertNoThrow(
-      try authenticator.authenticate(newCredential),
-      "New PIN (\(newPIN)) is not accepted."
-    )
+    XCTAssertNoThrow(try authenticator.login(newCredential), "New PIN (\(newPIN)) is not accepted.")
   }
 }

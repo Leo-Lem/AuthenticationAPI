@@ -1,5 +1,4 @@
-@testable import App
-import AppCore
+@testable import AuthenticationAPI
 import XCTVapor
 
 final class AuthenticationAPITests: XCTestCase {
@@ -7,13 +6,26 @@ final class AuthenticationAPITests: XCTestCase {
 
   override func setUpWithError() throws {
     app = Application(.testing)
-    try configure(app, authenticator: Authenticator())
+    try app.configure(authenticator: Authenticator())
   }
   
-  override func tearDownWithError() throws {
-    app.shutdown()
-  }
+  override func tearDownWithError() throws { app.shutdown() }
 
+  func testExists() throws {
+    let credential = Credential(id: "SomeUserID", pin: "SomePIN")
+    
+    try app.test(.POST, "register") { req in
+      try req.content.encode(credential)
+    }
+    
+    try app.test(.PUT, "exists") { req in
+      try req.content.encode(credential.id)
+    } afterResponse: { res in
+      XCTAssertEqual(res.status, .ok, "Operation unsuccessful.")
+      XCTAssertTrue(try res.content.decode(Bool.self), "The ID does not exist after registering.")
+    }
+  }
+  
   func testRegistering() throws {
     let credential = Credential(id: "SomeUserID", pin: "SomePIN")
     
@@ -25,14 +37,14 @@ final class AuthenticationAPITests: XCTestCase {
     }
   }
 
-  func testAuthenticating() throws {
+  func testLoggingIn() throws {
     let credential = Credential(id: "SomeUserID", pin: "SomePIN")
     
     try app.test(.POST, "register") { req in
       try req.content.encode(credential)
     }
     
-    try app.test(.PUT, "authenticate") { req in
+    try app.test(.PUT, "login") { req in
       try req.content.encode(credential)
     } afterResponse: { res in
       XCTAssertEqual(res.status, .ok, "Operation unsuccessful.")
@@ -56,7 +68,7 @@ final class AuthenticationAPITests: XCTestCase {
       XCTAssertEqual(try res.content.decode(Credential.self), newCredential, "Credentials don't match.")
     }
     
-    try app.test(.PUT, "authenticate") { req in
+    try app.test(.PUT, "login") { req in
       try req.content.encode(newCredential)
     }
   }
