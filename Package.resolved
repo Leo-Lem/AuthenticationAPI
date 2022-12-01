@@ -28,30 +28,12 @@
       }
     },
     {
-      "identity" : "leosmisc",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Leo-Lem/LeosMisc",
-      "state" : {
-        "branch" : "main",
-        "revision" : "d8b30a637ca3684d1040c94481e87773aee4189a"
-      }
-    },
-    {
       "identity" : "multipart-kit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/multipart-kit.git",
       "state" : {
         "revision" : "0d55c35e788451ee27222783c7d363cb88092fab",
         "version" : "4.5.2"
-      }
-    },
-    {
-      "identity" : "previews",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Leo-Lem/Previews",
-      "state" : {
-        "branch" : "main",
-        "revision" : "83c34f8ffe5906a565d9f714519d4f1ac83725ad"
       }
     },
     {

@@ -1,7 +1,5 @@
 //  Created by Leopold Lemmermann on 20.11.22.
 
-import struct LeosMisc.Persisted
-
 class Authenticator {
   @Persisted("Credentials") var credentials = [Credential.ID: Credential.PIN]()
   

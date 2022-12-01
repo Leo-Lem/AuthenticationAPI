@@ -8,21 +8,16 @@ let package = Package(
 
 // MARK: - (DEPENDENCIES)
 
-let misc = "LeosMisc"
 let vapor = "vapor"
 
-package.dependencies = [
-  .package(url: "https://github.com/vapor/\(vapor)", from: "4.0.0"),
-  .package(url: "https://github.com/Leo-Lem/\(misc)", branch: "main")
-]
+package.dependencies = [.package(url: "https://github.com/vapor/\(vapor)", from: "4.0.0")]
 
 // MARK: - (TARGETS)
 
 let api: Target = .executableTarget(
   name: "AuthenticationAPI",
   dependencies: [
-    .product(name: "Vapor", package: vapor),
-    .byName(name: misc)
+    .product(name: "Vapor", package: vapor)
   ],
   path: "Sources"
 )
