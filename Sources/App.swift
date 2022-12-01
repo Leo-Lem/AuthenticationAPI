@@ -22,10 +22,12 @@ extension Application {
   func configure(authenticator: Authenticator) throws {
     put("exists") { req in
       let id = try req.content.decode(Credential.ID.self)
-      
-      let exists = authenticator.exists(with: id)
-      
-      return try await exists.encodeResponse(for: req)
+
+      if authenticator.exists(with: id) {
+        return "Success!"
+      } else {
+        throw Abort(.notFound)
+      }
     }
     
     post("register") { req in

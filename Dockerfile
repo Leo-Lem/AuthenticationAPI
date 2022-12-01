@@ -11,4 +11,4 @@ RUN mkdir /app/bin
 RUN mv `swift build --show-bin-path -c release` /app/bin
 
 EXPOSE 8080
-ENTRYPOINT ./bin/release/Run serve --env local --hostname 0.0.0.0
+ENTRYPOINT ./bin/release/AuthenticationAPI serve --env local --hostname 0.0.0.0

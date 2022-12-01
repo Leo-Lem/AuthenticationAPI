@@ -14,6 +14,12 @@ final class AuthenticationAPITests: XCTestCase {
   func testExists() throws {
     let credential = Credential(id: "SomeUserID", pin: "SomePIN")
     
+    try app.test(.PUT, "exists") { req in
+      try req.content.encode(credential.id)
+    } afterResponse: { res in
+      XCTAssertEqual(res.status, .notFound, "Found when it shouldn't be.")
+    }
+    
     try app.test(.POST, "register") { req in
       try req.content.encode(credential)
     }
@@ -22,7 +28,6 @@ final class AuthenticationAPITests: XCTestCase {
       try req.content.encode(credential.id)
     } afterResponse: { res in
       XCTAssertEqual(res.status, .ok, "Operation unsuccessful.")
-      XCTAssertTrue(try res.content.decode(Bool.self), "The ID does not exist after registering.")
     }
   }
   
